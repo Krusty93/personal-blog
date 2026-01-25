@@ -1,3 +1,34 @@
 baseURL = 'https://example.org/'
+
+# Metadata
 languageCode = 'en-us'
-title = 'My New Hugo Site'
+theme = 'hugo-bearblog'
+title = "My Blog"
+author = "Andrea Grillo"
+copyright = "Copyright © 2026, Andrea Grillo."
+
+# SEO
+enableRobotsTXT = true
+
+# Links
+disableKinds = ["taxonomy"]
+ignoreErrors = ["error-disable-taxonomy"]
+
+[permalinks]
+  blog = "/:slug/"
+  tags = "/blog/:slug"
+
+[params]
+  description = "Made with :heart: in Milan"
+
+  # favicon = "images/favicon.png"
+
+  enablePostNavigator = true
+
+# https://gohugo.io/configuration/markup/#highlight
+[markup]
+  [markup.highlight]
+    style = 'friendly'
+    lineNos = true
+    lineNumbersInTable = false
+    codeFences = true
