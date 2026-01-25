@@ -47,3 +47,14 @@ ignoreErrors = ["error-disable-taxonomy"]
   lang = "en"
   loading = "lazy"
   crossorigin = "anonymous"
+
+[outputs]
+  home = ['html', 'rss']
+  section = ['html', 'rss']
+  taxonomy = ['html']
+  term = ['html']
+
+[outputFormats]
+  [outputFormats.RSS]
+    mediatype = "application/rss"
+    baseName = "feed"

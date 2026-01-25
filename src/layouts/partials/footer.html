@@ -1,0 +1,4 @@
+{{ if .IsHome }}
+<p style="text-align: center;">blog subscription via <a href="{{ .Site.BaseURL }}feed.xml">rss</a></p>
+{{ end }}
+{{ if not (.Param "hideMadeWithLine") }}Made with <a href="https://github.com/janraasch/hugo-bearblog/">Hugo ʕ•ᴥ•ʔ Bear</a>{{ end }}
