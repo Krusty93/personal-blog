@@ -3,7 +3,7 @@ baseURL = 'https://example.org/'
 # Metadata
 languageCode = 'en-us'
 theme = 'hugo-bearblog'
-title = "My Blog"
+title = "Krusty's blog"
 author = "Andrea Grillo"
 copyright = "Copyright © 2026, Andrea Grillo."
 
@@ -19,9 +19,9 @@ ignoreErrors = ["error-disable-taxonomy"]
   tags = "/blog/:slug"
 
 [params]
-  description = "Made with :heart: in Milan"
-
-  # favicon = "images/favicon.png"
+  title = "Krusty's blog"
+  description = "Made with :heart: in Italy"
+  favicon = "images/favicon.png"
 
   enablePostNavigator = true
 
