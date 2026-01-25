@@ -32,3 +32,18 @@ ignoreErrors = ["error-disable-taxonomy"]
     lineNos = true
     lineNumbersInTable = false
     codeFences = true
+
+[params.giscus]
+  repo = "krusty93/personal-blog"
+  repoID = "R_kgDORA05qA"
+  category = "Announcements"
+  categoryID = "DIC_kwDORA05qM4C1Zuv"
+  mapping = "url"
+  strict = "0"
+  reactionsEnabled = "1"
+  emitMetadata = "1"
+  inputPosition = "bottom"
+  theme = "preferred_color_scheme"
+  lang = "en"
+  loading = "lazy"
+  crossorigin = "anonymous"
