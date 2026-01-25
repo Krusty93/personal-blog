@@ -25,6 +25,23 @@ ignoreErrors = ["error-disable-taxonomy"]
 
   enablePostNavigator = true
 
+  # Social links
+  [[params.socialLinks]]
+    name = "GitHub"
+    url = "https://github.com/krusty93"
+  
+  [[params.socialLinks]]
+    name = "LinkedIn"
+    url = "https://linkedin.com/in/grillo-andrea"
+  
+  [[params.socialLinks]]
+    name = "RSS"
+    url = "/feed/"
+  
+  [[params.socialLinks]]
+    name = "InfoQ"
+    url = "https://www.infoq.com/profile/Andrea-Grillo/#articles"
+
 # https://gohugo.io/configuration/markup/#highlight
 [markup]
   [markup.highlight]
