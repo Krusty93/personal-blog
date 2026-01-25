@@ -1,0 +1,46 @@
+# Vercel Web Analytics Implementation
+
+Successfully implemented Vercel Web Analytics for the Hugo-based personal blog.
+
+## Changes Made
+
+### Created
+- `layouts/partials/custom_head.html` - Added Vercel Web Analytics tracking script
+
+## Implementation Details
+
+The Hugo theme (hugo-bearblog) provides a `custom_head.html` partial that is included in the base template's `<head>` section. This is the standard Hugo way to inject custom code into the site's HTML.
+
+I created `layouts/partials/custom_head.html` with the Vercel Web Analytics script as documented for HTML sites:
+
+```html
+<!-- Vercel Web Analytics -->
+<script>
+  window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+```
+
+## Verification
+
+- Successfully built the site using `hugo --gc --minify`
+- Verified that the analytics script is properly included in all generated HTML pages
+- The script is included in the `<head>` section of every page on the site
+
+## Notes
+
+- For Hugo sites, no npm packages are needed since we use the direct HTML script approach
+- The script will automatically track page views once the site is deployed to Vercel
+- After enabling Web Analytics in the Vercel dashboard, the `/_vercel/insights/*` routes will be available
+- No route detection is included with this implementation (as noted in the HTML documentation), but page views will still be tracked
+
+## Next Steps for User
+
+1. Enable Web Analytics in the Vercel dashboard:
+   - Go to the project dashboard
+   - Click the "Analytics" tab
+   - Click "Enable"
+
+2. Deploy the site to Vercel (the analytics will start working after deployment)
+
+3. After deployment, verify in the browser's Network tab that requests are being made to `/_vercel/insights/view`
