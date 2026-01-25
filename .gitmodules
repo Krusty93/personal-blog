@@ -1,0 +1,6 @@
+[submodule "src/themes/bearblog"]
+	path = src/themes/bearblog
+	url = git@github.com:janraasch/hugo-bearblog.git
+[submodule "src/themes/hugo-bearblog"]
+	path = src/themes/hugo-bearblog
+	url = https://github.com/janraasch/hugo-bearblog.git
