@@ -28,7 +28,7 @@ ignoreErrors = ["error-disable-taxonomy"]
   # Social links
   [[params.socialLinks]]
     name = "GitHub"
-    url = "https://github.com/krusty93"
+    url = "https://github.com/Krusty93/personal-blog"
   
   [[params.socialLinks]]
     name = "LinkedIn"
