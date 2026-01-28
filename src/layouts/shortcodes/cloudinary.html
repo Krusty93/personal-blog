@@ -1,0 +1,57 @@
+{{/*
+  Cloudinary Image Shortcode
+  
+  Usage:
+    {{< cloudinary src="image-name.jpg" alt="Description" >}}
+    {{< cloudinary src="folder/image.jpg" alt="Description" width="800" >}}
+    {{< cloudinary src="image.jpg" alt="Description" transform="w_600,h_400,c_fill" >}}
+  
+  Parameters:
+    - src: Image path/name in Cloudinary (required)
+    - alt: Alt text for accessibility (required)
+    - width: Optional width constraint (adds w_{width})
+    - height: Optional height constraint (adds h_{height})
+    - transform: Custom transformations (overrides width/height)
+    - class: Optional CSS class for the img element
+    - caption: Optional caption text below the image
+*/}}
+
+{{- $cloudName := .Site.Params.cloudinary.cloudName -}}
+{{- $defaultTransform := .Site.Params.cloudinary.defaultTransformations | default "f_auto,q_auto" -}}
+
+{{- $src := .Get "src" -}}
+{{- $alt := .Get "alt" | default "" -}}
+{{- $width := .Get "width" -}}
+{{- $height := .Get "height" -}}
+{{- $transform := .Get "transform" -}}
+{{- $class := .Get "class" -}}
+{{- $caption := .Get "caption" -}}
+
+{{/* Build transformations */}}
+{{- $transforms := $defaultTransform -}}
+
+{{- if $transform -}}
+  {{/* Use custom transform if provided */}}
+  {{- $transforms = printf "%s,%s" $defaultTransform $transform -}}
+{{- else -}}
+  {{/* Build from width/height params */}}
+  {{- if $width -}}
+    {{- $transforms = printf "%s,w_%s" $transforms $width -}}
+  {{- end -}}
+  {{- if $height -}}
+    {{- $transforms = printf "%s,h_%s" $transforms $height -}}
+  {{- end -}}
+{{- end -}}
+
+{{/* Build the full Cloudinary URL */}}
+{{- $baseURL := printf "https://res.cloudinary.com/%s/image/upload" $cloudName -}}
+{{- $imageURL := printf "%s/%s/%s" $baseURL $transforms $src -}}
+
+{{- if $caption -}}
+<figure{{ with $class }} class="{{ . }}"{{ end }}>
+  <img src="{{ $imageURL }}" alt="{{ $alt }}" loading="lazy" />
+  <figcaption>{{ $caption }}</figcaption>
+</figure>
+{{- else -}}
+<img src="{{ $imageURL }}" alt="{{ $alt }}"{{ with $class }} class="{{ . }}"{{ end }} loading="lazy" />
+{{- end -}}

@@ -25,6 +25,11 @@ ignoreErrors = ["error-disable-taxonomy"]
 
   enablePostNavigator = true
 
+  # Cloudinary configuration
+  [params.cloudinary]
+    cloudName = "dvcwiysuv"
+    defaultTransformations = "f_auto,q_auto"  # Auto format and quality
+
   # Social links
   [[params.socialLinks]]
     name = "GitHub"
