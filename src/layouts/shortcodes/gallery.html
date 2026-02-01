@@ -1,0 +1,300 @@
+{{/*
+  Cloudinary Image Gallery Shortcode
+  
+  Usage:
+    {{< gallery >}}
+      {{< gallery-item src="image1.jpg" alt="First image" >}}
+      {{< gallery-item src="image2.jpg" alt="Second image" >}}
+      {{< gallery-item src="image3.jpg" alt="Third image" >}}
+    {{< /gallery >}}
+  
+  Features:
+    - Displays 100x100 thumbnails
+    - Click to open full-screen lightbox
+    - Navigate with arrow buttons or keyboard
+    - Image counter (e.g., 3/10)
+    - Optimized loading with Cloudinary transformations
+*/}}
+
+{{- $cloudName := .Site.Params.cloudinary.cloudName -}}
+{{- $defaultTransform := .Site.Params.cloudinary.defaultTransformations | default "f_auto,q_auto" -}}
+{{- $galleryId := printf "gallery-%d" (now.UnixMilli) -}}
+
+<div class="cloudinary-gallery" id="{{ $galleryId }}">
+  <div class="gallery-grid">
+    {{ .Inner }}
+  </div>
+</div>
+
+<div class="gallery-lightbox" id="{{ $galleryId }}-lightbox">
+  <div class="lightbox-overlay"></div>
+  <div class="lightbox-content">
+    <button class="lightbox-close" aria-label="Close">&times;</button>
+    <button class="lightbox-prev" aria-label="Previous image">&#8249;</button>
+    <button class="lightbox-next" aria-label="Next image">&#8250;</button>
+    <div class="lightbox-image-container">
+      <img class="lightbox-image" src="" alt="" loading="lazy" />
+    </div>
+    <div class="lightbox-counter"></div>
+  </div>
+</div>
+
+<style>
+.cloudinary-gallery {
+  margin: 2rem 0;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 0.5rem;
+  max-width: 100%;
+}
+
+.gallery-item {
+  width: 100px;
+  height: 100px;
+  overflow: hidden;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gallery-item:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.gallery-item img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  display: block;
+}
+
+.gallery-lightbox {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+}
+
+.gallery-lightbox.active {
+  display: block;
+}
+
+.lightbox-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.95);
+}
+
+.lightbox-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox-image-container {
+  max-width: 90%;
+  max-height: 90%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox-image {
+  max-width: 100%;
+  max-height: 90vh;
+  object-fit: contain;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  font-size: 50px;
+  font-weight: bold;
+  color: white;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 10001;
+  padding: 0;
+  line-height: 1;
+  transition: color 0.2s ease;
+}
+
+.lightbox-close:hover {
+  color: #ccc;
+}
+
+.lightbox-prev,
+.lightbox-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 60px;
+  font-weight: bold;
+  color: white;
+  background: rgba(0, 0, 0, 0.5);
+  border: none;
+  cursor: pointer;
+  padding: 10px 20px;
+  z-index: 10001;
+  transition: background 0.2s ease;
+  user-select: none;
+}
+
+.lightbox-prev:hover:not(:disabled),
+.lightbox-next:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.lightbox-prev:disabled,
+.lightbox-next:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.lightbox-prev {
+  left: 20px;
+}
+
+.lightbox-next {
+  right: 20px;
+}
+
+.lightbox-counter {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  font-size: 18px;
+  font-weight: 500;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 8px 16px;
+  border-radius: 20px;
+  z-index: 10001;
+}
+
+@media (max-width: 768px) {
+  .lightbox-prev,
+  .lightbox-next {
+    font-size: 40px;
+    padding: 5px 15px;
+  }
+  
+  .lightbox-close {
+    font-size: 40px;
+    top: 10px;
+    right: 15px;
+  }
+  
+  .lightbox-counter {
+    font-size: 14px;
+    bottom: 20px;
+    padding: 6px 12px;
+  }
+}
+</style>
+
+<script>
+(function() {
+  const galleryId = '{{ $galleryId }}';
+  const gallery = document.getElementById(galleryId);
+  const lightbox = document.getElementById(galleryId + '-lightbox');
+  const lightboxImage = lightbox.querySelector('.lightbox-image');
+  const lightboxCounter = lightbox.querySelector('.lightbox-counter');
+  const closeBtn = lightbox.querySelector('.lightbox-close');
+  const prevBtn = lightbox.querySelector('.lightbox-prev');
+  const nextBtn = lightbox.querySelector('.lightbox-next');
+  const overlay = lightbox.querySelector('.lightbox-overlay');
+  
+  let images = [];
+  let currentIndex = 0;
+
+  // Collect all gallery items
+  const items = gallery.querySelectorAll('.gallery-item');
+  items.forEach((item, index) => {
+    const img = item.querySelector('img');
+    images.push({
+      src: item.dataset.fullSrc,
+      alt: img.alt
+    });
+    
+    item.addEventListener('click', () => {
+      openLightbox(index);
+    });
+  });
+
+  function openLightbox(index) {
+    currentIndex = index;
+    updateLightbox();
+    lightbox.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    lightbox.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  function updateLightbox() {
+    const current = images[currentIndex];
+    lightboxImage.src = current.src;
+    lightboxImage.alt = current.alt;
+    lightboxCounter.textContent = `${currentIndex + 1}/${images.length}`;
+    
+    // Update button states
+    prevBtn.disabled = currentIndex === 0;
+    nextBtn.disabled = currentIndex === images.length - 1;
+  }
+
+  function showPrevious() {
+    if (currentIndex > 0) {
+      currentIndex--;
+      updateLightbox();
+    }
+  }
+
+  function showNext() {
+    if (currentIndex < images.length - 1) {
+      currentIndex++;
+      updateLightbox();
+    }
+  }
+
+  // Event listeners
+  closeBtn.addEventListener('click', closeLightbox);
+  overlay.addEventListener('click', closeLightbox);
+  prevBtn.addEventListener('click', showPrevious);
+  nextBtn.addEventListener('click', showNext);
+
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    if (!lightbox.classList.contains('active')) return;
+    
+    if (e.key === 'Escape') {
+      closeLightbox();
+    } else if (e.key === 'ArrowLeft') {
+      showPrevious();
+    } else if (e.key === 'ArrowRight') {
+      showNext();
+    }
+  });
+})();
+</script>

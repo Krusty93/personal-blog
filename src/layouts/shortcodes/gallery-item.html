@@ -1,0 +1,31 @@
+{{/*
+  Gallery Item - Used inside the gallery shortcode
+  
+  Usage:
+    {{< gallery-item src="image.jpg" alt="Description" >}}
+  
+  Parameters:
+    - src: Image path in Cloudinary (required)
+    - alt: Alt text for accessibility (required)
+*/}}
+
+{{- $cloudName := .Site.Params.cloudinary.cloudName -}}
+{{- $defaultTransform := .Site.Params.cloudinary.defaultTransformations | default "f_auto,q_auto" -}}
+
+{{- $src := .Get "src" -}}
+{{- $alt := .Get "alt" | default "" -}}
+
+{{/* Build transformations for thumbnail (100x100, cropped to fill) */}}
+{{- $thumbTransform := printf "%s,w_100,h_100,c_fill,g_auto" $defaultTransform -}}
+
+{{/* Build transformations for full size (max 2000px width for performance) */}}
+{{- $fullTransform := printf "%s,w_2000,c_limit" $defaultTransform -}}
+
+{{/* Build URLs */}}
+{{- $baseURL := printf "https://res.cloudinary.com/%s/image/upload" $cloudName -}}
+{{- $thumbURL := printf "%s/%s/%s" $baseURL $thumbTransform $src -}}
+{{- $fullURL := printf "%s/%s/%s" $baseURL $fullTransform $src -}}
+
+<div class="gallery-item" data-full-src="{{ $fullURL }}">
+  <img src="{{ $thumbURL }}" alt="{{ $alt }}" width="100" height="100" loading="lazy" />
+</div>
