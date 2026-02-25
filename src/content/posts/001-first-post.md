@@ -1,7 +1,8 @@
 +++
 date = '2026-01-28T17:29:57Z'
 title = 'Initial Commit <for myself>'
-description = "Introduction to the blog, why it exists and what is useful for"
+description = 'Introduction to the blog, why it exists and what is useful for'
+url = 'initial-commit'
 tags = [
     "first-post",
     "blog"

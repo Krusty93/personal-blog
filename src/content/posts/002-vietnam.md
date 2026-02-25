@@ -1,7 +1,8 @@
 +++
 date = '2026-02-18T00:03:52Z'
 title = 'Postcards from Viet Nam'
-description = "A photo-driven journal from my honeymoon across Viet Nam, with unsorted reflections."
+description = 'A photo-driven journal from my honeymoon across Viet Nam, with unsorted reflections.'
+url = 'vietnam-postcards'
 tags = [
     "vietnam",
     "photos",
