@@ -1,5 +1,6 @@
 {{ define "main" }}
-{{ if eq .Type "blog" }}{{ if not .Params.menu }}
+{{ $isPost := eq .Section "posts" }}
+{{ if $isPost }}{{ if not .Params.menu }}
 <h1>{{ .Title }}</h1>
 <p>
   <i>
@@ -13,7 +14,7 @@
   {{ .Content }}
 </content>
 
-{{ if eq .Type "blog" }}{{ if (.Param "enablePostNavigator")}}
+  {{ if $isPost }}{{ if (.Param "enablePostNavigator")}}
 {{- partial "post_navigator.html" . -}}
 {{ end }}{{ end }}
 
@@ -23,7 +24,7 @@
   {{ end }}
 </p>
 
-{{ if eq .Type "blog" }}
+  {{ if $isPost }}
 {{- partial "comments.html" . -}}
 {{ end }}
 {{ end }}
