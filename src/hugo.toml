@@ -3,7 +3,7 @@ baseURL = 'https://krusty.blog/'
 # Metadata
 languageCode = 'en-us'
 theme = 'hugo-bearblog'
-title = "Krusty's blog"
+title = "Krusty's Blog | Personal thoughts about the digital world and travelling"
 author = "Andrea Grillo"
 copyright = "Copyright © 2026, Andrea Grillo."
 
@@ -14,14 +14,20 @@ enableRobotsTXT = true
 disableKinds = ["taxonomy"]
 ignoreErrors = ["error-disable-taxonomy"]
 
+[sitemap]
+  changefreq = "weekly"
+  priority = 0.7
+  filename = "sitemap.xml"
+
 [permalinks]
   posts = "/:slug/"
   tags = "/tags/:slug"
 
 [params]
-  title = "Krusty's blog"
-  description = "Made with :heart: in Italy"
+  title = "Krusty's blog | Andrea Grillo"
+  description = "Personal blog by Andrea Grillo about software engineering, learning, travel notes, and practical reflections on work and life."
   favicon = "images/favicon.png"
+  images = ["images/social-card.png"]
 
   enablePostNavigator = true
 
