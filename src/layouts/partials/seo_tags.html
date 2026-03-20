@@ -1,0 +1,55 @@
+{{/*
+  Determine OG image with this priority:
+    1. Front-matter `images` on the page (manual override per post)
+    2. Dynamic Cloudinary URL with post title overlaid (any single page)
+    3. Global static fallback from params.images (home, list pages)
+*/}}
+{{- $ogImage := "" -}}
+{{- if .Params.images -}}
+  {{- $ogImage = index .Params.images 0 | absURL -}}
+{{- else if .IsPage -}}
+  {{- $cloudName := .Site.Params.cloudinary.cloudName -}}
+  {{- $title := replace (.Title | urlquery) "+" "%20" -}}
+  {{- $ogImage = printf "https://res.cloudinary.com/%s/image/upload/c_fill,w_1200,h_630/l_text:Arial_90_bold:%s,co_white,g_north_west,x_55,y_40,w_760,h_420,c_fit/f_auto,q_auto/social-card-base_gar3n7" $cloudName $title -}}
+{{- else -}}
+  {{- with .Site.Params.images -}}
+    {{- $ogImage = index . 0 | absURL -}}
+  {{- end -}}
+{{- end -}}
+
+<!-- Primary Meta Tags -->
+<meta name="title" content="{{ with .Title }}{{ . }}{{ else }}{{ .Site.Title }}{{ end }}" />
+<meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{if .IsPage}}{{ .Summary }}{{ else }}{{ with .Site.Params.description }}{{ . }}{{ end }}{{ end }}{{ end }}" />
+<meta name="keywords" content="{{ if .IsPage}}{{ range $index, $tag := .Params.tags }}{{ $tag }},{{ end }}{{ else }}{{ range $plural, $terms := .Site.Taxonomies }}{{ range $term, $val := $terms }}{{ printf "%s," $term }}{{ end }}{{ end }}{{ end }}" />
+
+<!-- Open Graph -->
+<meta property="og:url" content="{{ .Permalink }}" />
+<meta property="og:site_name" content="{{ .Site.Title }}" />
+<meta property="og:title" content="{{ with .Title }}{{ . }}{{ else }}{{ .Site.Title }}{{ end }}" />
+<meta property="og:description" content="{{ with .Description }}{{ . }}{{ else }}{{if .IsPage}}{{ .Summary }}{{ else }}{{ with .Site.Params.description }}{{ . }}{{ end }}{{ end }}{{ end }}" />
+<meta property="og:locale" content="{{ replace .Site.LanguageCode "-" "_" }}" />
+{{- if .IsPage }}
+<meta property="og:type" content="article" />
+<meta property="article:section" content="{{ .Section }}" />
+{{- with .PublishDate }}<meta property="article:published_time" content="{{ .Format "2006-01-02T15:04:05Z07:00" }}" />{{ end }}
+{{- with .Lastmod }}<meta property="article:modified_time" content="{{ .Format "2006-01-02T15:04:05Z07:00" }}" />{{ end }}
+{{- range (.GetTerms "tags") }}<meta property="article:tag" content="{{ .LinkTitle | title }}" />{{ end }}
+{{- else }}
+<meta property="og:type" content="website" />
+{{- end }}
+{{- with $ogImage }}
+<meta property="og:image" content="{{ . }}" />
+{{- end }}
+
+<!-- Twitter -->
+<meta name="twitter:title" content="{{ with .Title }}{{ . }}{{ else }}{{ .Site.Title }}{{ end }}" />
+<meta name="twitter:description" content="{{ with .Description }}{{ . }}{{ else }}{{if .IsPage}}{{ .Summary }}{{ else }}{{ with .Site.Params.description }}{{ . }}{{ end }}{{ end }}{{ end }}" />
+{{- with $ogImage }}
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="{{ . }}" />
+{{- else }}
+<meta name="twitter:card" content="summary" />
+{{- end }}
+
+<!-- Microdata / Schema.org -->
+{{ template "_internal/schema.html" . }}
